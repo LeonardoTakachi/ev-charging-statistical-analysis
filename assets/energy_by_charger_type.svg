@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450.0" y="34" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold">Average Energy by Charger Type</text>
+
+<line x1="80" y1="460" x2="870" y2="460" stroke="#333"/>
+<line x1="80" y1="60" x2="80" y2="460" stroke="#333"/>
+<text x="450.0" y="502" text-anchor="middle" font-family="Arial" font-size="14">Charger Type</text>
+<text transform="translate(20,260.0) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="14">Average Energy (kWh)</text>
+<rect x="170" y="164.3" width="110" height="295.7" fill="#59a14f"/><text x="225" y="480" text-anchor="middle" font-family="Arial" font-size="12">Level 2</text><text x="225" y="154.3" text-anchor="middle" font-family="Arial" font-size="13">45.08</text><rect x="390" y="187.1" width="110" height="272.9" fill="#59a14f"/><text x="445" y="480" text-anchor="middle" font-family="Arial" font-size="12">Level 1</text><text x="445" y="177.1" text-anchor="middle" font-family="Arial" font-size="13">41.61</text><rect x="610" y="189.2" width="110" height="270.8" fill="#59a14f"/><text x="665" y="480" text-anchor="middle" font-family="Arial" font-size="12">DC Fast Charger</text><text x="665" y="179.2" text-anchor="middle" font-family="Arial" font-size="13">41.29</text>
+</svg>
