@@ -1,0 +1,38 @@
+{
+  "valid_rows": 1254,
+  "probability_analysis": {
+    "mean_kwh": 42.64289425435557,
+    "median_kwh": 42.69140537961698,
+    "std_kwh": 22.41170458757918,
+    "probability_above_median": 0.4991364724736298,
+    "probability_above_median_percent": 49.91364724736298,
+    "probability_above_median_classification": "likely",
+    "mean_minus_2std_kwh": -2.1805149208027927,
+    "mean_plus_2std_kwh": 87.46630342951393,
+    "probability_within_2std": 0.9544997361036416,
+    "probability_within_2std_percent": 95.44997361036415,
+    "probability_within_2std_classification": "almost certain",
+    "empirical_within_2std": 0.9952153110047847,
+    "empirical_within_2std_percent": 99.52153110047847,
+    "normality_test": {
+      "test": "D'Agostino-Pearson",
+      "available": true,
+      "statistic": 39.98579076551763,
+      "p_value": 2.0758494723806187e-09,
+      "alpha": 0.05,
+      "reject_normality_at_5_percent": true
+    }
+  },
+  "linear_regression": {
+    "intercept": 41.55294648937216,
+    "coefficient": 0.5908138831305952,
+    "train_r2": 0.0007662500333392996,
+    "test_r2": -0.0024291703100269846,
+    "mae_kwh": 18.371525522006422,
+    "rmse_kwh": 21.30472772954748,
+    "baseline_mae_kwh": 18.373445898884345,
+    "baseline_rmse_kwh": 21.314596689626708,
+    "test_size": 0.2,
+    "random_state": 42
+  }
+}
