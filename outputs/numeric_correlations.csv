@@ -1,0 +1,10 @@
+,correlation_with_energy
+Charging Rate (kW),-0.04261004066202924
+Charging Duration (hours),0.028369482471343188
+Distance Driven (since last charge) (km),-0.027948096534432764
+Temperature (°C),-0.018508768685569988
+Vehicle Age (years),0.017104661409683156
+State of Charge (Start %),-0.013413504378465843
+Charging Cost (USD),-0.0077865680212675405
+State of Charge (End %),0.0006004838826064173
+Battery Capacity (kWh),0.0003226522375467868
