@@ -6,7 +6,7 @@
 
 Statistical and machine learning analysis of electric-vehicle charging sessions using **Python, Pandas, NumPy, SciPy, Matplotlib and scikit-learn**.
 
-This repository is a portfolio evolution of a FIAP Computer Science Challenge Sprint. The original academic implementation remains in `academic/`, while the portfolio version adds EDA, statistical diagnostics, held-out model evaluation, automated outputs, tests and CI.
+This repository is a portfolio evolution of a FIAP Computer Science Challenge Sprint. The original academic implementation is preserved in `academic/`, while the portfolio version adds exploratory data analysis, statistical diagnostics, held-out model evaluation, automated outputs, tests and CI.
 
 ## Main question
 
@@ -21,11 +21,11 @@ That is the main analytical finding of the project.
 | Metric | Result |
 | --- | ---: |
 | Raw records | 1,320 |
-| Valid records used in the main analysis | 1,254 |
+| Valid records used | 1,254 |
 | Mean energy consumed | 42.64 kWh |
 | Median energy consumed | 42.69 kWh |
 | Standard deviation | 22.41 kWh |
-| Normal-model probability above the sample median | 49.91% |
+| Normal-model probability above median | 49.91% |
 | Theoretical Normal probability inside mean ± 2 SD | 95.45% |
 | Empirical observations inside the same interval | 99.52% |
 | Train R² | 0.0008 |
@@ -40,17 +40,13 @@ That is the main analytical finding of the project.
 Energy Consumed = 41.5529 + (0.5908 × Charging Duration)
 ```
 
-The coefficient is positive but very small relative to the dispersion of the target, and the held-out **R² is negative (-0.0024)**. In practical terms, charging duration alone does not provide useful predictive power for energy consumption in this dataset.
+The held-out **R² is negative (-0.0024)** and the test RMSE (**21.30 kWh**) is virtually identical to the simple mean-value baseline (**21.31 kWh**). In practical terms, charging duration alone does not provide useful predictive power for energy consumption in this dataset.
 
-The test RMSE (21.30 kWh) is also virtually identical to a simple mean-value baseline (21.31 kWh), reinforcing that conclusion.
-
-![Linear Regression](assets/linear_regression.png)
+![Linear Regression](assets/linear_regression.svg)
 
 ## Exploratory findings
 
-The dataset contains 20 variables, allowing the portfolio version to look beyond the single academic predictor.
-
-The strongest numerical correlations with `Energy Consumed (kWh)` are still extremely weak:
+The strongest numerical correlations with `Energy Consumed (kWh)` are extremely weak:
 
 | Variable | Pearson correlation |
 | --- | ---: |
@@ -62,11 +58,9 @@ The strongest numerical correlations with `Energy Consumed (kWh)` are still extr
 
 No individual numerical variable shows a strong linear association with energy consumption.
 
-![Numeric Correlation Matrix](assets/numeric_correlation_matrix.png)
+![Strongest Numeric Correlations](assets/numeric_correlation_matrix.svg)
 
 ### Charger type
-
-Descriptively, average energy consumption differs somewhat by charger type:
 
 | Charger type | Mean energy |
 | --- | ---: |
@@ -74,13 +68,11 @@ Descriptively, average energy consumption differs somewhat by charger type:
 | Level 1 | 41.61 kWh |
 | DC Fast Charger | 41.29 kWh |
 
-These are descriptive differences only; this project does not claim that charger type causes higher consumption.
+These are descriptive differences only; the project does not claim that charger type causes higher energy consumption.
 
-![Energy by Charger Type](assets/energy_by_charger_type.png)
+![Energy by Charger Type](assets/energy_by_charger_type.svg)
 
 ### Time of day
-
-Average energy consumption varies only modestly across the observed periods:
 
 | Time of day | Mean energy |
 | --- | ---: |
@@ -89,62 +81,52 @@ Average energy consumption varies only modestly across the observed periods:
 | Night | 42.04 kWh |
 | Morning | 41.95 kWh |
 
-![Energy by Time of Day](assets/energy_by_time_of_day.png)
+![Energy by Time of Day](assets/energy_by_time_of_day.svg)
 
 ## Probability and Normality
 
-The original academic task asks for probability calculations under a Normal Distribution assumption.
+The original academic task uses probability calculations under a Normal Distribution assumption.
 
 Using the fitted Normal model:
 
 - probability above the sample median: **49.91%**;
 - theoretical probability inside mean ± 2 standard deviations: **95.45%**.
 
-However, the portfolio version also checks whether the Normal assumption is reasonable.
-
-The D'Agostino-Pearson test returned:
+The portfolio version also tests whether that assumption is appropriate. The D'Agostino-Pearson test returned:
 
 ```text
 p-value = 2.076e-09
 ```
 
-At a 5% significance level, the test **rejects normality**. The Q-Q plot also shows clear deviations in the tails.
+At a 5% significance level, the test **rejects normality**. The Q-Q plot also shows clear deviations in the tails. In addition, while a Normal model assigns 95.45% probability to mean ± 2 SD, the actual dataset places **99.52%** of observations inside the same interval.
 
-Furthermore, while a Normal model assigns 95.45% of probability to mean ± 2 SD, the actual dataset places **99.52%** of observations inside that interval.
+This means the Normal-based probabilities are useful for demonstrating the academic method, but should not be presented as if the empirical distribution were truly Normal.
 
-This is an important limitation: the Normal-based probabilities are useful for demonstrating the academic method, but they should not be presented as if the empirical distribution were truly Normal.
+![Energy Distribution](assets/energy_distribution.svg)
 
-![Energy Distribution](assets/energy_distribution.png)
-
-![Q-Q Plot](assets/energy_qq_plot.png)
+![Q-Q Plot](assets/energy_qq_plot.svg)
 
 ## Model evaluation
 
-The academic version fits and evaluates the regression on all observations.
-
-The portfolio version improves this by using:
+The academic version fits and evaluates the regression on the full dataset. The portfolio version improves this by using:
 
 - **80/20 train/test split**;
 - fixed `random_state=42` for reproducibility;
 - **MAE**;
 - **RMSE**;
 - **train R² and test R²**;
-- a simple mean-prediction baseline;
+- a mean-prediction baseline;
 - residual diagnostics.
 
-A negative test R² does **not** mean the project failed. It means the tested relationship is not useful for prediction on unseen data.
+A negative test R² does **not** mean the project failed. It means the tested relationship is not useful for prediction on unseen data. Reporting that result correctly is more valuable than forcing an artificially strong metric.
 
-That distinction is part of the point of the portfolio evolution: a data project should report what the data actually support rather than trying to manufacture a strong metric.
-
-![Residual Analysis](assets/residuals.png)
+![Residual Analysis](assets/residuals.svg)
 
 ## Data-leakage awareness
 
 The dataset also contains variables such as `Charging Rate (kW)` and `Charging Cost (USD)`.
 
-A future predictive model should verify how those fields were generated before using them as features. If a variable is calculated directly from energy consumed, using it to predict energy would create **target leakage** and produce misleadingly strong performance.
-
-This is why the current project does not automatically add every available column to a larger model.
+A future predictive model should verify how those fields were generated before using them as predictors. If a variable is calculated directly from energy consumed, using it to predict energy would create **target leakage** and misleadingly strong performance.
 
 ## Project structure
 
@@ -156,16 +138,14 @@ ev-charging-statistical-analysis/
 ├── academic/
 │   └── challenge_sprint3_final.py
 ├── assets/
-│   ├── duration_vs_energy_scatter.png
-│   ├── energy_by_charger_type.png
-│   ├── energy_by_time_of_day.png
-│   ├── energy_distribution.png
-│   ├── energy_qq_plot.png
-│   ├── linear_regression.png
-│   ├── numeric_correlation_matrix.png
-│   └── residuals.png
+│   ├── energy_by_charger_type.svg
+│   ├── energy_by_time_of_day.svg
+│   ├── energy_distribution.svg
+│   ├── energy_qq_plot.svg
+│   ├── linear_regression.svg
+│   ├── numeric_correlation_matrix.svg
+│   └── residuals.svg
 ├── data/
-│   ├── .gitkeep
 │   └── README.md
 ├── notebooks/
 │   └── ev_charging_analysis.ipynb
@@ -189,24 +169,19 @@ ev-charging-statistical-analysis/
 
 ## Dataset
 
-The analysis expects:
+The analysis expects the original dataset at:
 
 ```text
 data/ev_charging_patterns.csv
 ```
 
-The uploaded dataset contains **1,320 rows and 20 columns**.
-
-The raw CSV is intentionally excluded from the Git-ready package because its original redistribution license has not been confirmed. The generated charts and aggregate results are included so the analysis can still be reviewed directly on GitHub.
-
-If redistribution is permitted, add the CSV to `data/`.
+The analyzed file contains **1,320 rows and 20 columns**. The raw CSV is intentionally excluded because its redistribution license has not been confirmed. Aggregate results and charts are included so reviewers can still inspect the analysis directly.
 
 ## Installation
 
 ```bash
-git clone <YOUR-REPOSITORY-URL>
+git clone https://github.com/LeonardoTakachi/ev-charging-statistical-analysis.git
 cd ev-charging-statistical-analysis
-
 python -m venv .venv
 ```
 
@@ -226,21 +201,21 @@ pip install -r requirements.txt
 
 ## Run
 
+After placing the dataset in `data/`:
+
 ```bash
 python src/analysis.py
 ```
 
-The script regenerates the charts and analytical outputs automatically.
-
 ## Notebook
 
-For an exploratory walkthrough:
+Open:
 
 ```text
 notebooks/ev_charging_analysis.ipynb
 ```
 
-The notebook includes data loading, descriptive statistics, correlations, group comparisons, probability analysis and model evaluation.
+It walks through loading, descriptive statistics, correlations, group comparisons, probability analysis and regression evaluation.
 
 ## Tests and CI
 
@@ -249,7 +224,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-The repository includes GitHub Actions to compile the source files and run the test suite on pushes and pull requests.
+GitHub Actions automatically compiles the Python files and executes the test suite on pushes and pull requests to `main`.
 
 ## Academic context
 
@@ -262,9 +237,7 @@ Team:
 - Gustavo Bitencourt Lopes
 - Leonardo Basile Takachi
 
-The original academic solution is preserved in `academic/challenge_sprint3_final.py`.
-
-The portfolio-specific improvements — EDA, train/test evaluation, additional metrics, diagnostics, notebook, tests, CI and repository organization — are separated transparently from the original coursework.
+The original academic solution remains in `academic/challenge_sprint3_final.py`. The EDA, held-out evaluation, additional metrics, diagnostics, notebook, tests, CI and portfolio organization are separated transparently from the coursework.
 
 ## Skills demonstrated
 
@@ -286,6 +259,6 @@ The portfolio-specific improvements — EDA, train/test evaluation, additional m
 
 1. [`README.md`](README.md) — conclusions and methodology
 2. [`src/analysis.py`](src/analysis.py) — reproducible analysis pipeline
-3. [`notebooks/ev_charging_analysis.ipynb`](notebooks/ev_charging_analysis.ipynb) — exploratory analysis
+3. [`notebooks/ev_charging_analysis.ipynb`](notebooks/ev_charging_analysis.ipynb) — exploratory walkthrough
 4. [`outputs/analysis_summary.md`](outputs/analysis_summary.md) — generated results
-5. [`academic/challenge_sprint3_final.py`](academic/challenge_sprint3_final.py) — original academic baseline
+5. [`academic/challenge_sprint3_final.py`](academic/challenge_sprint3_final.py) — academic baseline
